@@ -1,0 +1,244 @@
+package LinkedList;
+
+import java.io.*;
+
+
+public class SinglyLinkedList<E> {
+  //Initializes the head of the Singly linked list.
+	private Node<E> head = null;
+	
+	/*
+	 * the number of nodes in the list.
+	 */
+	private int size;
+	//---------------------------Insert------------------------------//
+	/*
+	 * Insert an Item at Specified index
+	 */	
+	public void insert(int index, E item){//used to insert an item to specific index
+		if(index < 0 || index > size){//checks if the entered index is valid or not
+			throw new IndexOutOfBoundsException(Integer.toString(index));
+		}
+		if(index == 0){//if entered index = 0 it is inserted at the first
+			this.addFirst(item);
+		}
+		else{//else it gets the entered index and add the new item to that index.
+			Node<E> node = getNode(index - 1);
+			this.addAfter(node, item);
+		}
+	}
+	/*
+	 * Insert an Item to the last or first if list is empty
+	 */
+	public boolean insert(E item){//adds a new item to the last.
+		this.insert(this.size, item);//calls the add method where it gets the size for the									
+		return true;			  //index where the size determines the last and add the
+								  //new item to that index
+	}
+	/*
+	 * Insert a Node to the front of the list.
+	 */
+	public void addFirst(E Item){// E item = object item where it is equal to any data type.
+		this.head = new Node<E>(Item,this.head); //replaces the head with a new Node(new Data)
+		this.size++;//adds the new node to determine the number of nodes in the list.
+	}
+	/*
+	 * Insert a new Node after a Node in the list
+	 */
+	private void addAfter(Node<E> node,E Item){//use the getNode method and add a new node after it
+		node.next = new Node<E>(Item, node.next);//Initializes a new node after a node
+		this.size++;//adds the new node to determine the number of nodes in the list.
+	}
+	//----------------------------Delete----------------------------//
+	/*
+	 * Deleting a given node after a node in the list
+	 */
+	private E removeAfter(Node<E> node)//use the getNode method and remove the item next to it.
+	{
+		Node<E> tempoNode = node.next;//Initializes a temporary node = to node next to it
+		if(tempoNode != null)//where tempoNode is = next"Null".
+		{
+			node.next = tempoNode.next;//then replaces the link to link after the deleted Node.
+			this.size--;// then it reduces the size indicator of the nodes in the list.
+			return tempoNode.data;//gets the data of the node next after the deleted node.
+		}
+		else//nothing happens if the node is empty 
+		{
+			return null;
+		}
+		
+	}
+	/*
+	 * Deleting a node at the first.
+	 */
+	private E removefirst()
+	{
+		Node<E> tempoNode = head;//Initializes tempoNode = to the head.
+		if(head != null){
+			head = head.next;//initializes a link next to the head.
+		}
+		//returns data at old head and null if list is empty.
+		if(tempoNode != null){
+			this.size--;//reduces the size to determine the number of nodes
+			return tempoNode.data;//gets the data next to the head and makes it the first node.
+		}
+		else{
+			return null;//nothing happens if there is no node to remove
+		}
+	}
+	//----------------------------Edit----------------------------------//
+	/*
+	 * set the data value at index
+	 * @param index
+	 * @param new value
+	 * @return the new data value at previous index
+	 */
+	public E set(int index,E newValue){//gets the index and new data to be placed in it.
+		if(index < 0 || index >= size){
+			throw new IndexOutOfBoundsException(Integer.toString(index));//error if index>=size. 
+		}
+		Node<E> node = getNode(index);//gets the node in the index entered.
+		E result = node.data;//creates an object = to the data in the node.
+		node.data = newValue;//sets the new value in the data of the node.
+		return result;//returns the new data in the node to the list.
+	}
+	//---------------------------------get----------------------------//
+	/*
+	 * get the data value at index
+	 * @param index the position of the element to return
+	 * @return the data at index
+	 */
+	public E get(int index){//get the data in the node of specified index.
+		if(index < 0 || index >= size){
+			throw new IndexOutOfBoundsException(Integer.toString(index));
+		}
+		Node<E> node = getNode(index);//Initializes a new node = to specified index
+		return node.data;//returns the data in the in the node at specified index 
+	}
+		
+	
+	/*
+	 * find the node at a specified position
+	 * @param index the position of the node to return
+	 * @return the node at index or null if it does not exist
+	 */
+	private Node<E> getNode(int index){//gets the whole node
+		Node<E> node = this.head;//initializes a new node = the head
+		for(int x = 0 ;x < index && node != null;x++){//loops until it gets to the specified index
+			node = node.next;//set the node = to last node specified by the index
+		}
+		return node;//now returns the node specified by the index.
+	}
+	//-----------------------Link Pointer------------------------//
+	/*
+	 * 1) the first reference is the first node
+	 * 2) while reference to node is not null
+	 * 		3)do something with node being referenced
+	 * 		4)set reference to reference.next
+	 *NOTE: Used only when using PrintStream
+	 *		Indicates a pointer to the next node
+	 *		linked to it.
+	 */
+	
+	@Override//Overrides the method "toString"
+	public String toString(){
+		Node<E> nodeReference = this.head;//sets nodeReference = to the head
+		StringBuilder result = new StringBuilder();//creates a Stringbuilder		
+		while(nodeReference != null)//when nodeReference does'nt not meet the end of the list
+		{
+			result.append(nodeReference.data);//result will append the nodes data.
+			if(nodeReference.next != null){//if the node still have a link to a next node then
+				result.append(" ---> ");//prints the pointer
+			}
+			nodeReference = nodeReference.next;//nodeReference then links to next data.
+		}
+		return result.toString();//returns it as a list//
+	}
+	/*
+	 * Prints the List
+	 */
+	public void printList(){//Prints the list vertically
+		Node<E> current  = this.head;// sets current = to head
+		System.out.println("List of Data");
+		while(current != null){
+			current.printNode();//prints the current node
+			current = current.next;//link current to next node or simply change current data
+		}						   //is = to the next data.
+	}
+	/*
+	 * Finds the String data in the Nodes of the list.
+	 */
+	public int findNode(String Name){//gets a string value
+		int con = 0;//index counter
+		while(con < size){//while size is lessthan con
+			Node<E> node = getNode(con);//Initializes that node = code at index specified by con
+			E Data = node.data;//Initialize Data = node's data.
+			if(Data.equals(Name)){	
+				break;
+			}
+			else{
+				con++;
+				if(con >= size){
+					throw new TypeNotPresentException(Name,null);
+					//error if the value is not found in the nodes of the list
+				}
+			}
+		}
+		return con;//returns the current index where the data is found.
+		 
+	}	
+	
+	/*
+	 * A Node is the Building block of a Singly Linked List.
+	 */
+	private static class Node<E>{
+		
+		//Data Field
+		private E data;//Initializes a variable data for the raw Data.
+		private Node<E> next;//initializes next.
+		//Constructor
+		private Node(E data){
+			this.data = data;//makes the data variable = your raw Data.
+			this.next = null;//makes the next variable null.
+		}
+		private Node(E data,Node<E> NodeReference){
+			this.data = data;//makes the data variable = your raw Data.
+			this.next = NodeReference;//makes the next variable linked to the next Node.
+		}
+		public void printNode(){//Prints the data in the NOde.
+			System.out.println(this.data);
+		}
+		
+		
+	} 
+	public static void main(String[] args)throws IOException{		
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));		
+		SinglyLinkedList List1 = new SinglyLinkedList();
+		
+		List1.insert("Jason");
+		List1.insert("Kelvin");
+		List1.insert("Mathew");
+		List1.insert("Joshua");
+		List1.insert("Marjorie");
+		List1.printList();
+		System.out.println("\nEnter data to insert at index");
+		System.out.print("\nEnter Index : ");
+		int x = Integer.parseInt(in.readLine());
+		System.out.print("\nEnter Data : ");
+		String y = in.readLine();
+		List1.insert(x, y);
+		List1.printList();
+		System.out.print("\nEnter the Index of data before the data you want to delete : ");
+		int o = Integer.parseInt(in.readLine());
+		List1.removeAfter(List1.getNode(o));
+		List1.printList();
+		System.out.print("\nEnter the Data you want to find : ");
+		String p = in.readLine();
+		int op = List1.findNode(p);
+		System.out.println("The data can be found at Index "+op);
+		List1.printList();
+	}
+	
+	
+}
