@@ -1,0 +1,222 @@
+package LinkedList;
+
+public class DoublyLinkedList {
+    private Link first;	 
+	  private Link last;
+	 
+	  public DoublyLinkedList() {
+	    first = null;
+	    last = null;
+	  }
+	 
+	  public boolean isEmpty(){// used only to determine if the list is empty
+	    return first == null;
+	  }
+	 //-----------------------------Insert--------------------------------//
+	  
+	  public void insertFirst(long dd){// inserts a data at the beginning
+	    Link newLink = new Link(dd);// Initializes a new Link for the data.
+	 
+	    if(isEmpty())//checks if the list is empty
+	      last = newLink;// initializes newLink as the last	    
+	    else
+	    first.previous = newLink;//connects the new link to the first
+	    newLink.next = first;//connects the newlink's next to first
+	    first = newLink;//the new Link or data is now the first
+	    
+	  }
+	 
+	  public void insertLast(long dd){//inserts a data at the last.
+	    Link newLink = new Link(dd);// Initializes a new Link for the data.
+	    if (isEmpty())//checks if the list is empty
+	      first = newLink;// initializes newLink as the first	  
+	    else {
+	      last.next = newLink;//connects the new link to the last
+	      newLink.previous = last;//connects the newlink's previous to last
+	    }
+	    last = newLink;//the new link or data is now the last
+	  }
+	  
+	  public boolean insertAfter(long key, long dd){//Inserts a data after a specific data
+		    Link current = first;//Initializes a temporary holder to every node
+		    while (current.dData != key){//loops until it gets the key where to insert after
+		      current = current.next;//temporary or current jumps to next
+		      if (current == null)//if current meets the end of the list
+		        return false;//cannot find it
+		    }
+		    Link newLink = new Link(dd);//make new link
+		    
+		    if (current == last)//if last link,
+		    {
+		      newLink.next = null;//as the new link is last.. makes the next node null
+		      last = newLink;//the new data is now at last
+		    } else//not last link,
+		    {
+		      newLink.next = current.next;
+		      current.next.previous = newLink;
+		    }
+		    newLink.previous = current;
+		    current.next = newLink;
+		    return true;//found it, insert
+		  }
+	  					//------End of insert-----//
+	  
+	  
+	 //------------------------------Delete------------------------------//
+	  public Link deleteFirst(){//deletes the data at first
+	    Link temp = first;
+	    if (first.next == null)
+	      last = null;
+	    else
+	      first.next.previous = null;
+	    first = first.next;
+	    return temp;
+	  }
+	 
+	  public Link deleteLast(){//deletes the data at last
+	    Link temp = last;
+	    if (first.next == null)
+	      first = null;
+	    else
+	      last.previous.next = null;
+	    last = last.previous;
+	    return temp;
+	  }	  
+	 
+	  public Link deleteKey(long key){//deletes a specified data entered
+	    Link current = first;
+	    while (current.dData != key)
+	    {
+	      current = current.next;
+	      if (current == null)
+	        return null; // cannot find it
+	    }
+	    if (current == first) // found it; first item?
+	      first = current.next;
+	    else
+	      current.previous.next = current.next;
+	 
+	    if (current == last) // last item?
+	      last = current.previous;
+	    else
+	      // not last
+	      current.next.previous = current.previous;
+	    return current; // return value
+	  }
+	  					//------End of Delete-----//
+	  
+	 
+	  //-----------------------------Printing-------------------------//
+	  public void displayForward(){//prints first to last
+	    System.out.print("List (first to last): ");
+	    Link current = first; // start at beginning
+	    while (current != null) // until end of list,
+	    {
+	      current.displayLink();
+	      current = current.next; // move to next link
+	      if(current == null){
+	    	  
+	      }
+	      else{
+	    	  System.out.print(" <---> ");
+	      }
+	    }
+	    System.out.println("");
+	  }
+	 
+	  public void displayBackward() {//prints last to first
+	    System.out.print("List (last to first): ");
+	    Link current = last;
+	    while (current != null){
+	      current.displayLink();
+	      current = current.previous;	      
+	      if(current == null){
+	    	  
+	      }
+	      else{
+	    	  System.out.print(" <---> ");
+	      }
+	     
+	    }	   
+	    System.out.println("");
+	  }
+	  public void printList(){// prints the whole list vertically
+		    System.out.println("    List of Data");
+		    Link current = first; // start at beginning
+		    while (current != null) // until end of list,
+		    {
+		      System.out.print("\t");
+		      current.displayLink();
+		      current = current.next; // move to next link
+		      System.out.println();
+		    }
+		    System.out.println("");
+	  }
+	  			//--------End of Print--------//
+	  
+	  //------------------------Find-----------------------//
+	  public int find(long key){//finds the specified data entered.
+		  Link current = first;
+		  int inCounter = 0;
+		    while (current.dData != key)
+		    {		      		      
+		      if(current.dData == key)
+		    	  break;
+		      else
+		      inCounter++; 
+		      current = current.next;		    
+		    }
+		    return  inCounter;
+		    
+	  }
+	  				//-------End of Find--------//
+	 
+	  public static void main(String[] args) {
+	    DoublyLinkedList theList = new DoublyLinkedList();
+	 
+	    theList.insertFirst(22);
+	    theList.insertFirst(44);
+	    theList.insertLast(33);
+	    theList.insertLast(55);
+	 
+	    theList.displayForward();
+	    theList.displayBackward();	 
+	    
+	    theList.deleteKey(22);	 
+	    theList.displayForward();
+	    
+	    theList.deleteFirst();
+	    theList.displayForward();
+	    
+	    theList.deleteLast();
+	    theList.displayForward();
+	 
+	    theList.insertFirst(77);
+	    theList.insertAfter(33, 88);
+	 
+	    theList.displayForward();
+	    theList.printList();
+	    int x = theList.find(88);
+	    System.out.println("88 is found at index : "+x);
+	    
+	  }
+	 
+	}
+
+	//Building block or the Node it self
+	 
+	class Link {
+	  public long dData; //data item	 
+	  public Link next; //next link in list	 
+	  public Link previous; //previous link in list
+	 
+	  public Link(long d)
+	  {
+	    dData = d;
+	  }
+	 
+	  public void displayLink(){
+	    System.out.print("["+dData+"]");
+	  }
+	 
+	}
